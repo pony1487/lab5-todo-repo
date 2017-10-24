@@ -9,7 +9,7 @@ app = Flask(__name__)
  
 app.config['MYSQL_USER'] = 'root'
 app.config['MYSQL_PASSWORD'] = 'password'
-app.config['MYSQL_DB'] = 'studentbook'
+app.config['MYSQL_DB'] = 'todo'
 app.config['MYSQL_HOST'] = '35.189.212.51'
 mysql.init_app(app)
 
@@ -23,28 +23,28 @@ def statichtml(name=None):
 @app.route("/list")
 def hello(): # Name of the method
     cur = mysql.connection.cursor() #create a connection to the SQL instance
-    cur.execute('''SELECT * FROM students''') # execute an SQL statment
+    cur.execute('''SELECT * FROM task''') # execute an SQL statment
     rv = cur.fetchall() #Retreive all rows returend by the SQL statment
     return render_template('index.html', name=str(rv))     #Return the data in a string format
 
-@app.route("/add/<name>/<email>")
-def add(name=None, email=None):
+@app.route("/add/<name>/<task>")
+def add(name=None, task=None):
     cur= mysql.connection.cursor()
     insert_stmt = (
-                 "INSERT INTO students (studentName, email) "
+                 "INSERT INTO task (name, task) "
                  "VALUES (%s, %s)")
-    data=(name,email)
+    data=(name,task)
     cur.execute(insert_stmt, data)
     mysql.connection.commit()
     return render_template('index.html', name="New Record is added to the database")  
 
-@app.route("/update/<name>/<email>")
-def update(name=None, email=None):
+@app.route("/update/<name>/<task>")
+def update(name=None, task=None):
     cur=mysql.connection.cursor()
     update_stmt = (
-        "UPDATE students SET studentName = %s " 
-        "WHERE email = %s")
-    data=(name,email)
+        "UPDATE task SET name = %s " 
+        "WHERE task = %s")
+    data=(name,task)
     cur.execute(update_stmt, data)
     mysql.connection.commit()
     return render_template('index.html', name="User recored was updated")      #Return the data in a string format
@@ -52,7 +52,7 @@ def update(name=None, email=None):
 @app.route("/delete/<name>")
 def delete(name=None):
     cur=mysql.connection.cursor()
-    delstatmt = "DELETE FROM students WHERE studentName = ' {} ' ".format(name)
+    delstatmt = "DELETE FROM task WHERE name = ' {} ' ".format(name)
     print(delstatmt)                
    
     cur.execute(delstatmt)
