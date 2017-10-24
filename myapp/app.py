@@ -27,6 +27,7 @@ def hello(): # Name of the method
     rv = cur.fetchall() #Retreive all rows returend by the SQL statment
     return render_template('index.html', name=str(rv))     #Return the data in a string format
 
+#NOTE!!!!. This is called http://external-ip/insert in his HTML file
 @app.route("/add/<name>/<task>")
 def add(name=None, task=None):
     cur= mysql.connection.cursor()
@@ -36,7 +37,7 @@ def add(name=None, task=None):
     data=(name,task)
     cur.execute(insert_stmt, data)
     mysql.connection.commit()
-    return render_template('index.html', name="New Record is added to the database")  
+    return render_template('index.html', name="Record added")  
 
 @app.route("/update/<name>/<task>")
 def update(name=None, task=None):
